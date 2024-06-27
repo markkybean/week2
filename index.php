@@ -104,6 +104,7 @@
                             <thead class="table-secondary">
                                 <tr>
                                     <!-- <th scope="col">ID</th> -->
+                                    <th scope="col">ID</th>
                                     <th scope="col">Fetcher Code</th>
                                     <th scope="col">Fetcher Name</th>
                                     <th scope="col">Contact no.</th>
@@ -120,6 +121,7 @@
                                 while ($xrs = $xstmt->fetch(PDO::FETCH_ASSOC)) {
                                 ?>
                                     <tr>
+                                        <td><?php echo htmlspecialchars($xrs["id"]) ?></td>
                                         <td><?php echo htmlspecialchars($xrs["fetcher_code"]) ?></td>
                                         <td><?php echo htmlspecialchars($xrs["fetcher_name"]) ?></td>
                                         <td><?php echo htmlspecialchars($xrs["contact_no"]) ?></td>
@@ -177,6 +179,101 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+    $(document).ready(function() {
+        $('#addStudent').click(function() {
+            $('#students').append('<div class="form-row mb-2"><div class="col"><input type="text" class="form-control" name="studentcode[]" placeholder="Student Code"></div><div class="col"><input type="text" class="form-control" name="relationship[]" placeholder="Relationship"></div></div>');
+        });
+
+        $('#fetcherForm').submit(function(event) {
+            event.preventDefault();
+            $.ajax({
+                url: 'save_fetcher.php',
+                type: 'post',
+                data: $(this).serialize(),
+                success: function(response) {
+                    alert(response);
+                }
+            });
+        });
+    });
+</script>
 </body>
 
 </html>
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetcher File</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <form id="fetcherForm">
+        <div class="form-group">
+            <label for="fetcher_code">Fetcher Code:</label>
+            <input type="text" class="form-control" id="fetcher_code" name="fetcher_code">
+        </div>
+        <div class="form-group">
+            <label for="fetcher_name">Fetcher Name:</label>
+            <input type="text" class="form-control" id="fetcher_name" name="fetcher_name">
+        </div>
+        <div class="form-group">
+            <label for="contact_no">Contact No.:</label>
+            <input type="text" class="form-control" id="contact_no" name="contact_no">
+        </div>
+        <div class="form-group">
+            <label for="register_date">Registered Date:</label>
+            <input type="date" class="form-control" id="register_date" name="register_date">
+        </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="status" name="status">
+            <label class="form-check-label" for="status">Active</label>
+        </div>
+        <div class="mt-3">
+            <label>Students:</label>
+            <div id="students">
+                <div class="form-row mb-2">
+                    <div class="col">
+                        <input type="text" class="form-control" name="studentcode[]" placeholder="Student Code">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="relationship[]" placeholder="Relationship">
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-secondary" id="addStudent">Add Student</button>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Save</button>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#addStudent').click(function() {
+            $('#students').append('<div class="form-row mb-2"><div class="col"><input type="text" class="form-control" name="studentcode[]" placeholder="Student Code"></div><div class="col"><input type="text" class="form-control" name="relationship[]" placeholder="Relationship"></div></div>');
+        });
+
+        $('#fetcherForm').submit(function(event) {
+            event.preventDefault();
+            $.ajax({
+                url: 'save_fetcher.php',
+                type: 'post',
+                data: $(this).serialize(),
+                success: function(response) {
+                    alert(response);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
+ -->

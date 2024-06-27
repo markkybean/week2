@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $registerDate = date_format(date_create($_POST["registerDate"]), "Y-m-d");
     $isActive = isset($_POST["status"]) && $_POST["status"] == "active" ? 1 : 0; // Check if active checkbox is checked
 
-    // Prepare data for insertion
+    // Prepare data for insertion into fetchers table
     $params = array(
         "fetcher_code" => $fetcherCode,
         "fetcher_name" => $fetcherName,
@@ -23,13 +23,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         "status" => $isActive
     );
 
-    // Insert data into database
+    // Insert data into fetchers table
     $success = PDO_InsertRecord($link_id, "fetchers", $params, false);
 
     // Check if insertion was successful
     if ($success) {
-        $response["status"] = "success";
-        $response["message"] = "Fetcher added successfully";
+        // Prepare to insert data into fetchers_students table
+        $fetcherID = $link_id->lastInsertId(); // Get the last inserted fetcher ID
+
+        // Loop through the student codes and relationships
+        for ($i = 1; $i <= count($_POST) / 2; $i++) {
+            $studentCodeKey = 'studentCode' . $i;
+            $relationshipKey = 'relationship' . $i;
+
+            if (isset($_POST[$studentCodeKey]) && !empty($_POST[$studentCodeKey])) {
+                $studentCode = htmlspecialchars($_POST[$studentCodeKey]);
+                $relationship = htmlspecialchars($_POST[$relationshipKey]);
+
+                // Prepare data for insertion into fetchers_students table
+                $fetchersStudentsParams = array(
+                    "fetcher_code" => $fetcherCode,
+                    "studentcode" => $studentCode,
+                    "relationship" => $relationship
+                );
+
+                // Insert data into fetchers_students table
+                $success = PDO_InsertRecord($link_id, "fetchers_students", $fetchersStudentsParams, false);
+
+                // Check if insertion was successful
+                if (!$success) {
+                    $response["status"] = "error";
+                    $response["message"] = "Failed to add fetcher-student relationship";
+                    break;
+                }
+            }
+        }
+
+        if ($success) {
+            $response["status"] = "success";
+            $response["message"] = "Fetcher and relationships added successfully";
+        }
     } else {
         $response["status"] = "error";
         $response["message"] = "Failed to add fetcher";
