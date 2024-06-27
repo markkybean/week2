@@ -12,23 +12,8 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-4">
-                <div class="container mt-5 p-4 bg-info">
-                    <h2 class="mb-4">Enter Student Information</h2>
-                    <form action="add_students.php" method="post">
-                        <div class="input-group flex-nowrap mt-3">
-                            <span class="input-group-text" id="studentcode-addon">Student Code</span>
-                            <input type="number" class="form-control" id="studentcode" name="studentcode" aria-describedby="studentcode-addon" required>
-                        </div>
-                        <div class="input-group flex-nowrap mt-3">
-                            <span class="input-group-text" id="fullname-addon">Full Name</span>
-                            <input type="text" class="form-control" id="fullname" name="fullname" aria-describedby="fullname-addon" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary mt-4">Submit</button>
-                    </form>
-                </div>
-            </div>
-            <div class="col-2"></div>
+
+            <!-- <div class="col-2"></div> -->
             <div class="col-4">
                 <div class="container mt-5 bg-info p-4">
                     <h2 class="mb-4">Enter Fetcher Information</h2>
@@ -66,8 +51,8 @@
                                     $numStudents = count($students);
 
                                     for ($i = 1; $i <= $numStudents; $i++) {
-                                        echo '<select class="form-control mt-2" id="studentCode' . $i . '" name="studentCode' . $i . '" >';
-                                        echo '<option value="">Select Student '  . '</option>';
+                                        echo '<select class="form-control mt-2 student-select" id="studentCode' . $i . '" name="studentCode' . $i . '" onchange="filterStudentCodes()">';
+                                        echo '<option value="">Select Student</option>';
                                         foreach ($students as $student) {
                                             echo '<option value="' . htmlspecialchars($student["studentcode"]) . '">' . htmlspecialchars($student["studentcode"]) . '</option>';
                                         }
@@ -79,19 +64,111 @@
                                     <p>Relationship</p>
                                     <?php
                                     for ($i = 1; $i <= $numStudents; $i++) {
-                                        echo '<input type="text" class="form-control mt-2" id="relationship" name="relationship" required>';
+                                        echo '<input type="text" class="form-control mt-2" id="relationship' . $i . '" name="relationship' . $i . '">';
                                     }
                                     ?>
-
                                 </div>
                             </div>
                         </div>
 
+                        <button type="submit" class="btn btn-primary mt-4">Save</button>
+                    </form>
+                </div>
 
+
+            </div>
+
+
+            <div class="col-4">
+                <div class="container mt-5 p-4 bg-info">
+                    <h2 class="mb-4">Enter Student Information</h2>
+                    <form action="add_students.php" method="post">
+                        <div class="input-group flex-nowrap mt-3">
+                            <span class="input-group-text" id="studentcode-addon">Student Code</span>
+                            <input type="number" class="form-control" id="studentcode" name="studentcode" aria-describedby="studentcode-addon" required>
+                        </div>
+                        <div class="input-group flex-nowrap mt-3">
+                            <span class="input-group-text" id="fullname-addon">Full Name</span>
+                            <input type="text" class="form-control" id="fullname" name="fullname" aria-describedby="fullname-addon" required>
+                        </div>
                         <button type="submit" class="btn btn-primary mt-4">Submit</button>
                     </form>
                 </div>
             </div>
+
+            <div class="col-4">
+                <div class="container mt-5 p-4 bg-info">
+                    <h2 class="mb-4">Fetcher File Report</h2>
+                    <form id="report-form" method="post" target="_blank">
+                        <div class="input-group flex-nowrap mt-3">
+                            <span class="input-group-text" id="fetcher-from-addon">Fetcher From:</span>
+                            <input type="number" class="form-control" id="fetcher-from" name="fetcher_from" aria-describedby="fetcher-from-addon" required>
+                        </div>
+                        <div class="input-group flex-nowrap mt-3">
+                            <span class="input-group-text" id="fetcher-to-addon">Fetcher To:</span>
+                            <input type="text" class="form-control" id="fetcher-to" name="fetcher_to" aria-describedby="fetcher-to-addon" required>
+                        </div>
+
+                        <div class="input-group flex-nowrap mt-3">
+                            <span class="input-group-text" id="reg-date-from-addon">Reg. Date From:</span>
+                            <input type="date" class="form-control" id="reg-date-from" name="reg_date_from" aria-describedby="reg-date-from-addon" required>
+                        </div>
+                        <div class="input-group flex-nowrap mt-3">
+                            <span class="input-group-text" id="reg-date-to-addon">Reg Date To:</span>
+                            <input type="date" class="form-control" id="reg-date-to" name="reg_date_to" aria-describedby="reg-date-to-addon" required>
+                        </div>
+
+                        <div class="form-check mt-3">
+                            <input type="checkbox" class="form-check-input" id="status" name="status" value="inactive">
+                            <label class="form-check-label" for="status">Display Inactive fetcher only</label>
+                        </div>
+
+                        <div class="row mt-3 ms-4">
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" id="report-type-detailed" name="report_type" value="detailed" checked>
+                                    <label class="form-check-label" for="report-type-detailed">Detailed</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" id="report-type-summarized" name="report_type" value="summarized">
+                                    <label class="form-check-label" for="report-type-summarized">Summarized</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary mt-4">Print</button>
+                    </form>
+                </div>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const form = document.getElementById('report-form');
+                        const reportTypeInputs = document.querySelectorAll('input[name="report_type"]');
+
+                        reportTypeInputs.forEach(input => {
+                            input.addEventListener('change', function() {
+                                if (this.value === 'detailed') {
+                                    form.action = 'pdf_detailed.php';
+                                } else if (this.value === 'summarized') {
+                                    form.action = 'pdf_summarized.php';
+                                }
+                            });
+                        });
+
+                        // Set the initial form action based on the default checked radio button
+                        const initialChecked = document.querySelector('input[name="report_type"]:checked');
+                        if (initialChecked) {
+                            form.action = initialChecked.value === 'detailed' ? 'pdf_detailed.php' : 'pdf_summarized.php';
+                        }
+                    });
+                </script>
+
+
+
+            </div>
+
         </div>
     </div>
 
@@ -179,101 +256,27 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+
     <script>
-    $(document).ready(function() {
-        $('#addStudent').click(function() {
-            $('#students').append('<div class="form-row mb-2"><div class="col"><input type="text" class="form-control" name="studentcode[]" placeholder="Student Code"></div><div class="col"><input type="text" class="form-control" name="relationship[]" placeholder="Relationship"></div></div>');
-        });
+        function filterStudentCodes() {
+            const selects = document.querySelectorAll('.student-select');
+            const selectedValues = Array.from(selects).map(select => select.value);
 
-        $('#fetcherForm').submit(function(event) {
-            event.preventDefault();
-            $.ajax({
-                url: 'save_fetcher.php',
-                type: 'post',
-                data: $(this).serialize(),
-                success: function(response) {
-                    alert(response);
-                }
+            selects.forEach(select => {
+                const options = select.querySelectorAll('option');
+                options.forEach(option => {
+                    if (option.value && selectedValues.includes(option.value) && option.value !== select.value) {
+                        option.style.display = 'none';
+                    } else {
+                        option.style.display = 'block';
+                    }
+                });
             });
-        });
-    });
-</script>
+        }
+
+        document.addEventListener('DOMContentLoaded', filterStudentCodes);
+    </script>
 </body>
 
 </html>
-
-
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fetcher File</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-<div class="container mt-5">
-    <form id="fetcherForm">
-        <div class="form-group">
-            <label for="fetcher_code">Fetcher Code:</label>
-            <input type="text" class="form-control" id="fetcher_code" name="fetcher_code">
-        </div>
-        <div class="form-group">
-            <label for="fetcher_name">Fetcher Name:</label>
-            <input type="text" class="form-control" id="fetcher_name" name="fetcher_name">
-        </div>
-        <div class="form-group">
-            <label for="contact_no">Contact No.:</label>
-            <input type="text" class="form-control" id="contact_no" name="contact_no">
-        </div>
-        <div class="form-group">
-            <label for="register_date">Registered Date:</label>
-            <input type="date" class="form-control" id="register_date" name="register_date">
-        </div>
-        <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="status" name="status">
-            <label class="form-check-label" for="status">Active</label>
-        </div>
-        <div class="mt-3">
-            <label>Students:</label>
-            <div id="students">
-                <div class="form-row mb-2">
-                    <div class="col">
-                        <input type="text" class="form-control" name="studentcode[]" placeholder="Student Code">
-                    </div>
-                    <div class="col">
-                        <input type="text" class="form-control" name="relationship[]" placeholder="Relationship">
-                    </div>
-                </div>
-            </div>
-            <button type="button" class="btn btn-secondary" id="addStudent">Add Student</button>
-        </div>
-        <button type="submit" class="btn btn-primary mt-3">Save</button>
-    </form>
-</div>
-
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('#addStudent').click(function() {
-            $('#students').append('<div class="form-row mb-2"><div class="col"><input type="text" class="form-control" name="studentcode[]" placeholder="Student Code"></div><div class="col"><input type="text" class="form-control" name="relationship[]" placeholder="Relationship"></div></div>');
-        });
-
-        $('#fetcherForm').submit(function(event) {
-            event.preventDefault();
-            $.ajax({
-                url: 'save_fetcher.php',
-                type: 'post',
-                data: $(this).serialize(),
-                success: function(response) {
-                    alert(response);
-                }
-            });
-        });
-    });
-</script>
-</body>
-</html>
- -->
