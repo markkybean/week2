@@ -110,7 +110,7 @@ try {
     foreach ($fetchers as $fetcher_code => $fetcher_data) {
         // Display fetcher code
         $xtop -= 20;
-        $pdf->ezPlaceData(50, $xtop, "Fetcher {$fetcher_code}", $xfsize, 'left');
+        $pdf->ezPlaceData(50, $xtop, "Fetcher code: {$fetcher_code}", $xfsize, 'left');
         $xtop -= 15;
 
         // Display students for the fetcher
