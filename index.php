@@ -14,6 +14,10 @@
         <div class="row">
 
             <!-- <div class="col-2"></div> -->
+
+
+            <!-- fetcher input -->
+
             <div class="col-4">
                 <div class="container mt-5 bg-info p-4">
                     <h2 class="mb-4">Enter Fetcher Information</h2>
@@ -79,6 +83,8 @@
             </div>
 
 
+            <!-- student input -->
+
             <div class="col-4">
                 <div class="container mt-5 p-4 bg-info">
                     <h2 class="mb-4">Enter Student Information</h2>
@@ -95,6 +101,8 @@
                     </form>
                 </div>
             </div>
+
+            <!-- call fetchers  -->
 
             <div class="col-4">
                 <div class="container mt-5 p-4 bg-info">
@@ -172,6 +180,8 @@
         </div>
     </div>
 
+
+    <!-- table -->
     <div class="container mt-5">
         <div class="row">
             <div class="col-8">

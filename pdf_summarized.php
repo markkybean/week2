@@ -23,14 +23,12 @@ try {
     $xtop = 750;
 
     // Header content
- // Header content
-$pdf->ezPlaceData(25, $xtop, "<b>Fetcher File Report</b>", 12, 'left');
-$xtop -= 20;
+    $pdf->ezPlaceData(25, $xtop, "<b>Fetcher File Report</b>", 12, 'left');
+    $xtop -= 20;
 
-// Display date printed
-$pdf->ezPlaceData(25, $xtop, "Date Printed: " . date('Y-m-d'), $xfsize, 'left');
-$xtop -= 20;
-
+    // Display date printed
+    $pdf->ezPlaceData(25, $xtop, "Date Printed: " . date('Y-m-d'), $xfsize, 'left');
+    $xtop -= 20;
 
     // Draw top line
     $pdf->line(25, $xtop, 587, $xtop);
@@ -60,10 +58,11 @@ $xtop -= 20;
                       WHERE f.fetcher_code BETWEEN :fetcher_from AND :fetcher_to
                       AND f.register_date BETWEEN :reg_date_from AND :reg_date_to";
 
-    if ($status) {
-        $xqry_fetchers .= " AND f.status = 'inactive'";
-    }
-
+if ($status) {
+    $xqry_fetchers .= " AND f.status = 0"; // Inactive
+} else {
+    $xqry_fetchers .= " AND f.status = 1"; // Active
+}
     $xqry_fetchers .= " GROUP BY f.fetcher_code";
 
     $xstmt_fetchers = $link_id->prepare($xqry_fetchers);
@@ -96,7 +95,6 @@ $xtop -= 20;
 
         $xtop -= 15;
         // Draw line after each fetcher
-        // $pdf->line(25, $xtop, 587, $xtop);
         $xtop -= 5;
     }
 
@@ -105,8 +103,8 @@ $xtop -= 20;
 
     // Display total count of fetchers and students
     $xtop -= 20;
-    // $pdf->ezPlaceData(50, $xtop, "Total Fetchers: " . $total_fetchers, $xfsize, 'left');
-    // $pdf->ezPlaceData(50, $xtop - 15, "Total Unique Students: " . $total_students, $xfsize, 'left');
+    $pdf->ezPlaceData(50, $xtop, "Total Fetchers: " . $total_fetchers, $xfsize, 'left');
+    $pdf->ezPlaceData(50, $xtop - 15, "Total Unique Students: " . $total_students, $xfsize, 'left');
 
     // Restore state and add header to all pages
     $pdf->restoreState();

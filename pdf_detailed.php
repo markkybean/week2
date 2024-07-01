@@ -49,7 +49,7 @@ try {
     $fetcher_to = $_POST['fetcher_to'];
     $reg_date_from = $_POST['reg_date_from'];
     $reg_date_to = $_POST['reg_date_to'];
-    $status = isset($_POST['status']) && $_POST['status'] == 'inactive';
+    $status = isset($_POST['status']) && $_POST['status'] === 'inactive';
 
     $xqry_fetchers = "SELECT f.fetcher_code, fs.studentcode, sf.fullname, fs.relationship
                       FROM fetchers_students fs
@@ -58,13 +58,16 @@ try {
                       WHERE f.fetcher_code BETWEEN :fetcher_from AND :fetcher_to
                       AND f.register_date BETWEEN :reg_date_from AND :reg_date_to";
 
+    // Add condition based on status
     if ($status) {
-        $xqry_fetchers .= " AND f.status = 'inactive'";
+        $xqry_fetchers .= " AND f.status = 0"; // Inactive
+    } else {
+        $xqry_fetchers .= " AND f.status = 1"; // Active
     }
 
     $xstmt_fetchers = $link_id->prepare($xqry_fetchers);
-    $xstmt_fetchers->bindParam(':fetcher_from', $fetcher_from, PDO::PARAM_STR);
-    $xstmt_fetchers->bindParam(':fetcher_to', $fetcher_to, PDO::PARAM_STR);
+    $xstmt_fetchers->bindParam(':fetcher_from', $fetcher_from, PDO::PARAM_INT);
+    $xstmt_fetchers->bindParam(':fetcher_to', $fetcher_to, PDO::PARAM_INT);
     $xstmt_fetchers->bindParam(':reg_date_from', $reg_date_from, PDO::PARAM_STR);
     $xstmt_fetchers->bindParam(':reg_date_to', $reg_date_to, PDO::PARAM_STR);
     $xstmt_fetchers->execute();
